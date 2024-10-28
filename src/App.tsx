@@ -1,20 +1,46 @@
 
 
-import { Button } from './components/ui/button'
+import { Route, Routes } from 'react-router-dom';
+import MainLayout from './Layout/MainLayout';
+import coreRoutes from './Routes';
+import { Suspense } from 'react';
+import {  Loader } from 'lucide-react';
+import Home from './Pages/basics/Home';
+
 
 function App() {
 
 
   return (
-    <>
-     <div className="container flex items-start justify-start">
-  <div className='bg-gray-500'>
-    welcome to a starter projectx
-  </div>
-  <div>
-    <Button className="bg-blue-800 text-gray-200">shadcn btn</Button>
-  </div>
-</div>
+   <>
+   <Routes>
+       
+       {/* <Route path="/auth/login" element={<Login/>} /> */}
+      
+       <Route  element={<MainLayout />}>
+         {/* <Route  element={<PrivateRoute/>}>    */}
+         <Route index element={<Home/>}></Route>
+           {/* zone des onglets pour Admin */}
+           {coreRoutes.map((routes, index) => {
+             const { path, component: Component } = routes;
+             return (
+               <Route
+                 key={index}
+                 path={path}
+                 element={
+                   <Suspense fallback={<Loader />}>
+                     <Component />
+                   </Suspense>
+                 }
+               />
+             );
+           })}
+          
+
+         {/* </Route> */}
+       </Route>
+       
+     </Routes>
 
     </>
   )
