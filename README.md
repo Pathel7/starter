@@ -1,50 +1,14 @@
-# React + TypeScript + Vite
+####definitions de routes
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+-1 les routes sont definis dans les fichier index.ts dans le dossier routes, chaque route est defini comme un objet
 
-Currently, two official plugins are available:
+########## definition des objes
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+-1 les objets sont definis dans le dossier model, un ficher ecoleType pour renfermer tous les objets relier a l'ecole
+-2 pour les objets lies aux utilisateurs ils sont dans   userTypes
 
-## Expanding the ESLint configuration
-
-If you are developing a production application, we recommend updating the configuration to enable type aware lint rules:
-
-- Configure the top-level `parserOptions` property like this:
-
-```js
-export default tseslint.config({
-  languageOptions: {
-    // other options...
-    parserOptions: {
-      project: ['./tsconfig.node.json', './tsconfig.app.json'],
-      tsconfigRootDir: import.meta.dirname,
-    },
-  },
-})
-```
-
-- Replace `tseslint.configs.recommended` to `tseslint.configs.recommendedTypeChecked` or `tseslint.configs.strictTypeChecked`
-- Optionally add `...tseslint.configs.stylisticTypeChecked`
-- Install [eslint-plugin-react](https://github.com/jsx-eslint/eslint-plugin-react) and update the config:
-
-```js
-// eslint.config.js
-import react from 'eslint-plugin-react'
-
-export default tseslint.config({
-  // Set the react version
-  settings: { react: { version: '18.3' } },
-  plugins: {
-    // Add the react plugin
-    react,
-  },
-  rules: {
-    // other rules...
-    // Enable its recommended rules
-    ...react.configs.recommended.rules,
-    ...react.configs['jsx-runtime'].rules,
-  },
-})
+################### definitions des fonctions et Slice redux
+-1. nous gerons le slice dans le dossier Redux
+-2. chaque objet detient un slice et integre toutes les operations crud
+-3. pour l'option de l'authentication, il y a un slice authSlice qui gere cela
 ```
