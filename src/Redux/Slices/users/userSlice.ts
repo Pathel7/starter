@@ -3,6 +3,7 @@ import { RootState } from '../../store'; // Remplacez par le chemin de votre sto
 import { db } from '../../../configuration/firebase'; 
 import { collection, getDocs, addDoc, updateDoc, doc, deleteDoc } from 'firebase/firestore';
 import { User } from '@/Models/userType';
+import bcrypt from 'bcryptjs';
   // Adaptateur pour User
   const userAdapter = createEntityAdapter<User>();
   
@@ -25,15 +26,26 @@ import { User } from '@/Models/userType';
     }
   });
   
-  export const addUser = createAsyncThunk('users/addUser', async (newUser: Omit<User, 'id'>, thunkAPI) => {
-    try {
-      const docRef = await addDoc(collection(db, 'users'), newUser);
-      return { id: docRef.id, ...newUser };
-    } catch (error: any) {
-      return thunkAPI.rejectWithValue(error.message);
-    }
-  });
+  export const addUser = createAsyncThunk(
+    'users/addUser',
+    async (newUser: Omit<User, 'id'>, thunkAPI) => {
+      try {
+        // Chiffrer le mot de passe
+        const salt = await bcrypt.genSalt(10);
+        const hashedPassword = await bcrypt.hash(newUser.password, salt);
   
+        // Remplacer le mot de passe par le mot de passe chiffré
+        const userWithHashedPassword = { ...newUser, password: hashedPassword };
+  
+        // Ajouter l'utilisateur à la base de données
+        const docRef = await addDoc(collection(db, 'users'), userWithHashedPassword);
+  
+        return { id: docRef.id, ...userWithHashedPassword };
+      } catch (error: any) {
+        return thunkAPI.rejectWithValue(error.message);
+      }
+    }
+  );
   export const updateUser = createAsyncThunk('users/updateUser', async (updatedUser: User, thunkAPI) => {
     try {
       const docRef = doc(db, 'users', updatedUser.id);

@@ -3,6 +3,7 @@ import { RootState } from '../../store'; // Remplacez par le chemin de votre sto
 import { db } from '../../../configuration/firebase'; 
 import { collection, getDocs, addDoc, updateDoc, doc, deleteDoc } from 'firebase/firestore';
 import { Parent } from '@/Models/userType';
+import bcrypt from 'bcryptjs';
 
 
 // Adaptateur pour Parent
@@ -27,14 +28,26 @@ export const fetchParents = createAsyncThunk('parents/fetchParents', async (_, t
   }
 });
 
-export const addParent = createAsyncThunk('parents/addParent', async (newParent: Omit<Parent, 'id'>, thunkAPI) => {
-  try {
-    const docRef = await addDoc(collection(db, 'parents'), newParent);
-    return { id: docRef.id, ...newParent };
-  } catch (error: any) {
-    return thunkAPI.rejectWithValue(error.message);
+export const addParent = createAsyncThunk(
+  'parents/addParent',
+  async (newParent: Omit<Parent, 'id'>, thunkAPI) => {
+    try {
+      // Chiffrer le mot de passe
+      const salt = await bcrypt.genSalt(10);
+      const hashedPassword = await bcrypt.hash(newParent.password, salt);
+
+      // Remplacer le mot de passe par le mot de passe chiffré
+      const parentWithHashedPassword = { ...newParent, password: hashedPassword };
+
+      // Ajouter le parent à la base de données
+      const docRef = await addDoc(collection(db, 'parents'), parentWithHashedPassword);
+
+      return { id: docRef.id, ...parentWithHashedPassword };
+    } catch (error: any) {
+      return thunkAPI.rejectWithValue(error.message);
+    }
   }
-});
+);
 
 export const updateParent = createAsyncThunk('parents/updateParent', async (updatedParent: Parent, thunkAPI) => {
   try {

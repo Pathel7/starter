@@ -3,6 +3,9 @@ import { createSlice, createEntityAdapter, createAsyncThunk, PayloadAction } fro
 import { RootState } from '../../store'; // Remplacez par le chemin de votre store
 import { db } from '../../../configuration/firebase'; 
 import { collection, getDocs, addDoc, updateDoc, doc, deleteDoc } from 'firebase/firestore';
+import bcrypt from 'bcryptjs';
+
+
   // Adaptateur pour Professeur
   const professeurAdapter = createEntityAdapter<Professeur>();
   
@@ -25,14 +28,26 @@ import { collection, getDocs, addDoc, updateDoc, doc, deleteDoc } from 'firebase
     }
   });
   
-  export const addProfesseur = createAsyncThunk('professeurs/addProfesseur', async (newProfesseur: Omit<Professeur, 'id'>, thunkAPI) => {
-    try {
-      const docRef = await addDoc(collection(db, 'professeurs'), newProfesseur);
-      return { id: docRef.id, ...newProfesseur };
-    } catch (error: any) {
-      return thunkAPI.rejectWithValue(error.message);
+  export const addProfesseur = createAsyncThunk(
+    'professeurs/addProfesseur',
+    async (newProfesseur: Omit<Professeur, 'id'>, thunkAPI) => {
+      try {
+        // Chiffrer le mot de passe
+        const salt = await bcrypt.genSalt(10);
+        const hashedPassword = await bcrypt.hash(newProfesseur.password, salt);
+  
+        // Remplacer le mot de passe par le mot de passe chiffré
+        const professeurWithHashedPassword = { ...newProfesseur, password: hashedPassword };
+  
+        // Ajouter le professeur à la base de données
+        const docRef = await addDoc(collection(db, 'professeurs'), professeurWithHashedPassword);
+  
+        return { id: docRef.id, ...professeurWithHashedPassword };
+      } catch (error: any) {
+        return thunkAPI.rejectWithValue(error.message);
+      }
     }
-  });
+  );
   
   export const updateProfesseur = createAsyncThunk('professeurs/updateProfesseur', async (updatedProfesseur: Professeur, thunkAPI) => {
     try {

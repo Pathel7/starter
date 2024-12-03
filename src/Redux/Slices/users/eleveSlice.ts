@@ -27,14 +27,26 @@ export const fetchEleves = createAsyncThunk('eleves/fetchEleves', async (_, thun
   }
 });
 
-export const addEleve = createAsyncThunk('eleves/addEleve', async (newEleve: Omit<Eleve, 'id'>, thunkAPI) => {
-  try {
-    const docRef = await addDoc(collection(db, 'eleves'), newEleve);
-    return { id: docRef.id, ...newEleve };
-  } catch (error: any) {
-    return thunkAPI.rejectWithValue(error.message);
+export const addEleve = createAsyncThunk(
+  'eleves/addEleve',
+  async (newEleve: Omit<Eleve, 'id'>, thunkAPI) => {
+    try {
+      // Chiffrer le mot de passe
+      const salt = await bcrypt.genSalt(10);
+      const hashedPassword = await bcrypt.hash(newEleve.password, salt);
+
+      // Remplacer le mot de passe par le mot de passe chiffré
+      const eleveWithHashedPassword = { ...newEleve, password: hashedPassword };
+
+      // Ajouter l'élève à la base de données
+      const docRef = await addDoc(collection(db, 'eleves'), eleveWithHashedPassword);
+
+      return { id: docRef.id, ...eleveWithHashedPassword };
+    } catch (error: any) {
+      return thunkAPI.rejectWithValue(error.message);
+    }
   }
-});
+);
 
 export const updateEleve = createAsyncThunk('eleves/updateEleve', async (updatedEleve: Eleve, thunkAPI) => {
   try {
