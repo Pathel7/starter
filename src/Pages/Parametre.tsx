@@ -3,7 +3,7 @@ import React from 'react';
 const Parametre = () => {
   return (
     <div>
-      parametres
+      parametre
     </div>
   );
 }

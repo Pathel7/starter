@@ -2,11 +2,12 @@ export interface Eleve{
     nom: string;
     postnom: string;
     prenom: string;
-    email: string;
+    email?: string;
     adresse: string;
     classe_id: string;
     ecole_id: string;
     password: string;
+    firstConnection : boolean;
   }
   
   export interface Professeur {
@@ -17,6 +18,7 @@ export interface Eleve{
     adresse: string;
     email: string;
     password: string;
+    firstConnection : boolean;
   }
   
   export interface Parent{
@@ -28,6 +30,7 @@ export interface Eleve{
     adresse: string;
     password: string;
     ecole_id : string;
+    firstConnection : boolean;
   }
 
   export interface User{
@@ -40,5 +43,6 @@ export interface Eleve{
     password: string;
     ecole_id? : string;
     role : 'admin'|'supperAdmin'
+    firstConnection : boolean;
   }
   

@@ -5,7 +5,8 @@ import MainLayout from './Layout/MainLayout';
 import coreRoutes from './Routes';
 import { Suspense } from 'react';
 import {  Loader } from 'lucide-react';
-import Home from './Pages/basics/Home';
+import Home from './Pages/Home';
+import Login from './Pages/authentification/Login';
 
 
 function App() {
@@ -14,8 +15,8 @@ function App() {
   return (
    <>
    <Routes>
-       
-       {/* <Route path="/auth/login" element={<Login/>} /> */}
+    {/* routes de login */}       
+       <Route path="/login" element={<Login/>} />
       
        <Route  element={<MainLayout />}>
          {/* <Route  element={<PrivateRoute/>}>    */}
