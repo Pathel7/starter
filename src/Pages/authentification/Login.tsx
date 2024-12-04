@@ -1,3 +1,4 @@
+import { TYPE_ADMIN, TYPE_ELEVE, TYPE_PARENT, TYPE_PROFESSEUR } from "@/utils/constants";
 import React, { useState } from "react";
 
 interface FormData {
@@ -41,9 +42,11 @@ const Login: React.FC = () => {
               className="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
             >
               <option value="">Sélectionnez</option>
-              <option value="Admin">Admin</option>
-              <option value="Utilisateur">Utilisateur</option>
-              <option value="Visiteur">Visiteur</option>
+              <option value={TYPE_ADMIN}>{TYPE_ADMIN}</option>
+              <option value={TYPE_ADMIN}>{TYPE_PROFESSEUR}</option>
+              <option value={TYPE_ADMIN}>{TYPE_PARENT}</option>
+              <option value={TYPE_ADMIN}>{TYPE_ELEVE}</option>
+             
             </select>
           </div>
 
